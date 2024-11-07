@@ -1,41 +1,16 @@
-version: '3.8'
-
+version: "3.7"
 services:
-  web:
-    image: nginx:latest  # Nginx as a web server
-    container_name: nginx-web
-    ports:
-      - "8081:80"  # Exposing port 8081 on the host, mapped to port 80 inside the container
-    volumes:
-      - ./html:/usr/share/nginx/html  # Map local HTML files to container
-    networks:
-      - my-network
-
-  cache:
-    image: redis:latest  # Redis as an in-memory cache
-    container_name: redis-cache
-    ports:
-      - "8082:6379"  # Exposing port 8082 on the host, mapped to Redis default port 6379
-    networks:
-      - my-network
-
-  db:
-    image: postgres:latest  # PostgreSQL as a relational database
-    container_name: postgres-db
-    ports:
-      - "8083:5432"  # Exposing port 8083 on the host, mapped to PostgreSQL default port 5432
+  app:
+    container_name: knote-app
+    image: learnitguide/knotejs:1.0
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb  # Define a database on startup
-    volumes:
-      - postgres-data:/var/lib/postgresql/data  # Persist PostgreSQL data between restarts
-    networks:
-      - my-network
-
-networks:
-  my-network:
-    driver: bridge
-
-volumes:
-  postgres-data:  # Volume to store PostgreSQL data
+           MONGO_URL: mongodb://mongo_db_host:27017/dev
+    ports:
+     - "80:3000"
+    depends_on:
+     - mongo
+    links:
+      - mongo:mongo_db_host
+  mongo:
+    container_name: knote-mongo
+    image: mongo
