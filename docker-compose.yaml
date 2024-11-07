@@ -1,25 +1,41 @@
-version: "3.7"
+version: '3.8'
+
 services:
-  app1:
-    container_name: myapp1
-    image: some/app-image:1.0  # Replace with actual image
-    environment:
-      APP_NAME: "App1"
+  web:
+    image: nginx:latest  # Nginx as a web server
+    container_name: nginx-web
     ports:
-      - "8081:3000"  # Exposes port 3000 of the container on port 8081 of the host
+      - "8081:80"  # Exposing port 8081 on the host, mapped to port 80 inside the container
+    volumes:
+      - ./html:/usr/share/nginx/html  # Map local HTML files to container
+    networks:
+      - my-network
 
-  app2:
-    container_name: myapp2
-    image: some/app-image:1.0  # Replace with actual image
-    environment:
-      APP_NAME: "App2"
+  cache:
+    image: redis:latest  # Redis as an in-memory cache
+    container_name: redis-cache
     ports:
-      - "8082:3000"  # Exposes port 3000 of the container on port 8082 of the host
+      - "8082:6379"  # Exposing port 8082 on the host, mapped to Redis default port 6379
+    networks:
+      - my-network
 
-  app3:
-    container_name: myapp3
-    image: some/app-image:1.0  # Replace with actual image
-    environment:
-      APP_NAME: "App3"
+  db:
+    image: postgres:latest  # PostgreSQL as a relational database
+    container_name: postgres-db
     ports:
-      - "8083:3000"  # Exposes port 3000 of the container on port 8083 of the host
+      - "8083:5432"  # Exposing port 8083 on the host, mapped to PostgreSQL default port 5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb  # Define a database on startup
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Persist PostgreSQL data between restarts
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
+volumes:
+  postgres-data:  # Volume to store PostgreSQL data
