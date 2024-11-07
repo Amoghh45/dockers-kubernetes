@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  app1:
+    container_name: myapp1
+    image: some/app-image:1.0  # Replace with actual image
+    environment:
+      APP_NAME: "App1"
+    ports:
+      - "8081:3000"  # Exposes port 3000 of the container on port 8081 of the host
+
+  app2:
+    container_name: myapp2
+    image: some/app-image:1.0  # Replace with actual image
+    environment:
+      APP_NAME: "App2"
+    ports:
+      - "8082:3000"  # Exposes port 3000 of the container on port 8082 of the host
+
+  app3:
+    container_name: myapp3
+    image: some/app-image:1.0  # Replace with actual image
+    environment:
+      APP_NAME: "App3"
+    ports:
+      - "8083:3000"  # Exposes port 3000 of the container on port 8083 of the host
